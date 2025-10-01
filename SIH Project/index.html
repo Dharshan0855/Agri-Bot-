@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediTrack</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f7ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #0d47a1;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: #0d47a1;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #0d47a1;
+            color: #0d47a1;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .page {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        h2 {
+            color: #0d47a1;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-container input {
+            flex: 1;
+        }
+        
+        .patient-list {
+            margin-top: 20px;
+        }
+        
+        .patient-card {
+            background: #f9f9f9;
+            border-left: 4px solid #1a73e8;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .patient-card:hover {
+            transform: translateX(5px);
+            background: #f0f7ff;
+        }
+        
+        .patient-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #0d47a1;
+        }
+        
+        .patient-details {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            color: #666;
+        }
+        
+        .report-section {
+            margin-top: 30px;
+        }
+        
+        .report-item {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .report-date {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .report-details {
+            margin-top: 10px;
+            color: #666;
+        }
+        
+        .scan-section {
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .scan-placeholder {
+            width: 100%;
+            height: 200px;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            color: #777;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #0d47a1;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid #0d47a1;
+            color: #0d47a1;
+            font-weight: bold;
+        }
+        
+        .patient-detail-view {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .patient-info-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-section {
+            margin-bottom: 20px;
+        }
+        
+        .info-section h3 {
+            color: #0d47a1;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 5px 0;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .info-value {
+            color: #333;
+        }
+        
+        .medical-alert {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .patient-reports {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .vital-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .vital-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .vital-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #0d47a1;
+        }
+        
+        .vital-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .disease-tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 8px;
+            border-radius: 20px;
+            margin: 2px 4px 2px 0;
+            font-size: 0.9rem;
+        }
+        
+        .critical {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .patient-detail-view {
+                grid-template-columns: 1fr;
+            }
+            
+            .vital-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>MediTrack </span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="showPage('home')">Home</a></li>
+                    <li><a href="#" onclick="showPage('patients')">Patients</a></li>
+                    <li><a href="#" onclick="showPage('reports')">Reports</a></li>
+                    <li><a href="#" onclick="showPage('scan')">Scan Report</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn btn-secondary" id="loginBtn" onclick="showPage('login')">Login</button>
+                <button class="btn btn-primary" id="signupBtn" onclick="showPage('signup')">Sign Up</button>
+                <button class="btn btn-secondary" id="logoutBtn" style="display: none;" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <h2>Welcome to MediTrack </h2>
+            <p>Your comprehensive patient management system for healthcare professionals.</p>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalPatients">0</div>
+                    <div class="stat-label">Total Patients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalReports">0</div>
+                    <div class="stat-label">Reports Generated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="recentScans">0</div>
+                    <div class="stat-label">Recent Scans</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="criticalPatients">0</div>
+                    <div class="stat-label">Critical Patients</div>
+                </div>
+            </div>
+            
+            <div class="tab-container">
+                <div class="tab active" onclick="switchTab('recentPatients')">Recent Patients</div>
+                <div class="tab" onclick="switchTab('recentReports')">Recent Reports</div>
+                <div class="tab" onclick="switchTab('criticalCases')">Critical Cases</div>
+            </div>
+            
+            <div id="recentPatients" class="tab-content">
+                <div class="patient-list" id="recentPatientsList">
+                    <!-- Recent patients will be populated here -->
+                </div>
+            </div>
+            
+            <div id="recentReports" class="tab-content" style="display: none;">
+                <div class="report-section" id="recentReportsList">
+                    <!-- Recent reports will be populated here -->
+                </div>
+            </div>
+            
+            <div id="criticalCases" class="tab-content" style="display: none;">
+                <div class="patient-list" id="criticalPatientsList">
+                    <!-- Critical patients will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Page -->
+        <div id="patients" class="page">
+            <h2>Patient Management</h2>
+            <div class="search-container">
+                <input type="text" id="patientSearch" placeholder="Search patients by name...">
+                <button class="btn btn-primary" onclick="searchPatients()">Search</button>
+            </div>
+            <button class="btn btn-primary" onclick="showPage('addPatient')">Add New Patient</button>
+            <div class="patient-list" id="patientList">
+                <!-- Patient list will be populated here -->
+            </div>
+        </div>
+
+        <!-- Patient Detail Page -->
+        <div id="patientDetail" class="page">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 id="detailPatientName">Patient Details</h2>
+                <button class="btn btn-outline" onclick="showPage('patients')">
+                    <i class="fas fa-arrow-left"></i> Back to Patients
+                </button>
+            </div>
+            
+            <div class="patient-detail-view">
+                <div class="patient-info-card">
+                    <div class="info-section">
+                        <h3>Personal Information</h3>
+                        <div class="info-item">
+                            <span class="info-label">Name:</span>
+                            <span class="info-value" id="detailName">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Age:</span>
+                            <span class="info-value" id="detailAge">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Gender:</span>
+                            <span class="info-value" id="detailGender">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Blood Group:</span>
+                            <span class="info-value" id="detailBloodGroup">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Contact:</span>
+                            <span class="info-value" id="detailContact">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Emergency Contact:</span>
+                            <span class="info-value" id="detailEmergencyContact">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Medical Information</h3>
+                        <div class="info-item">
+                            <span class="info-label">Primary Physician:</span>
+                            <span class="info-value" id="detailPhysician">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Insurance ID:</span>
+                            <span class="info-value" id="detailInsurance">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Allergies:</span>
+                            <span class="info-value" id="detailAllergies">-</span>
+                        </div>
+                        <div id="detailAlert" class="medical-alert" style="display: none;">
+                            <i class="fas fa-exclamation-triangle"></i> Critical Condition
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Vital Statistics</h3>
+                        <div class="vital-stats">
+                            <div class="vital-card">
+                                <div class="vital-value" id="detailBP">-</div>
+                                <div class="vital-label">Blood Pressure</div>
+                            </div>
+                            <div class="vital-card">
+                                <div class="vital-value" id="detailHR">-</div>
+                                <div class="vital-label">Heart Rate</div>
+                            </div>
+                            <div class="vital-card">
+                                <div class="vital-value" id="detailTemp">-</div>
+                                <div class="vital-label">Temperature</div>
+                            </div>
+                            <div class="vital-card">
+                                <div class="vital-value" id="detailO2">-</div>
+                                <div class="vital-label">O2 Saturation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="patient-reports">
+                    <h3>Medical History & Reports</h3>
+                    <div class="info-section">
+                        <h4>Chronic Conditions</h4>
+                        <div id="detailConditions">
+                            <!-- Conditions will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h4>Recent Reports</h4>
+                        <div id="detailReports">
+                            <!-- Reports will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h4>Current Medications</h4>
+                        <div id="detailMedications">
+                            <!-- Medications will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Patient Page -->
+        <div id="addPatient" class="page">
+            <h2>Add New Patient</h2>
+            <form id="patientForm">
+                <div class="form-group">
+                    <label for="patientName">Full Name</label>
+                    <input type="text" id="patientName" required>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label for="patientAge">Age</label>
+                        <input type="number" id="patientAge" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientGender">Gender</label>
+                        <select id="patientGender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientBloodGroup">Blood Group</label>
+                    <select id="patientBloodGroup" required>
+                        <option value="">Select Blood Group</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label for="patientContact">Contact Number</label>
+                        <input type="tel" id="patientContact" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientEmergencyContact">Emergency Contact</label>
+                        <input type="tel" id="patientEmergencyContact" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientAddress">Address</label>
+                    <textarea id="patientAddress"></textarea>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label for="patientPhysician">Primary Physician</label>
+                        <input type="text" id="patientPhysician">
+                    </div>
+                    <div class="form-group">
+                        <label for="patientInsurance">Insurance ID</label>
+                        <input type="text" id="patientInsurance">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientAllergies">Allergies</label>
+                    <input type="text" id="patientAllergies" placeholder="Separate with commas">
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientConditions">Chronic Conditions</label>
+                    <input type="text" id="patientConditions" placeholder="Separate with commas">
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientMedicalHistory">Medical History</label>
+                    <textarea id="patientMedicalHistory"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Save Patient</button>
+                <button type="button" class="btn btn-secondary" onclick="showPage('patients')">Cancel</button>
+            </form>
+        </div>
+
+        <!-- Reports Page -->
+        <div id="reports" class="page">
+            <h2>Patient Reports</h2>
+            <div class="search-container">
+                <input type="text" id="reportSearch" placeholder="Search reports by patient name...">
+                <button class="btn btn-primary" onclick="searchReports()">Search</button>
+            </div>
+            <button class="btn btn-primary" onclick="showPage('addReport')">Add New Report</button>
+            <div class="report-section" id="reportList">
+                <!-- Reports will be populated here -->
+            </div>
+        </div>
+
+        <!-- Add Report Page -->
+        <div id="addReport" class="page">
+            <h2>Add New Report</h2>
+            <form id="reportForm">
+                <div class="form-group">
+                    <label for="reportPatient">Select Patient</label>
+                    <select id="reportPatient" required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reportDate">Report Date</label>
+                    <input type="date" id="reportDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="reportType">Report Type</label>
+                    <select id="reportType" required>
+                        <option value="">Select Report Type</option>
+                        <option value="Blood Test">Blood Test</option>
+                        <option value="X-Ray">X-Ray</option>
+                        <option value="MRI">MRI</option>
+                        <option value="CT Scan">CT Scan</option>
+                        <option value="Ultrasound">Ultrasound</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reportFindings">Findings</label>
+                    <textarea id="reportFindings" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="reportDiagnosis">Diagnosis</label>
+                    <textarea id="reportDiagnosis" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="reportRecommendations">Recommendations</label>
+                    <textarea id="reportRecommendations"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Report</button>
+                <button type="button" class="btn btn-secondary" onclick="showPage('reports')">Cancel</button>
+            </form>
+        </div>
+
+        <!-- Scan Report Page -->
+        <!-- Link to backend app.py (for demonstration, not functional in HTML) -->
+        <script src="app.py"></script>
+        <button class="btn btn-secondary" onclick="enableCameraScan()">
+            <i class="fas fa-camera"></i> Use Camera
+        </button>
+        <script>
+            // Camera scanning logic
+            let videoStream = null;
+
+            function enableCameraScan() {
+                const scanSection = document.querySelector('#scan .scan-section');
+                let cameraContainer = document.getElementById('cameraContainer');
+                if (!cameraContainer) {
+                    cameraContainer = document.createElement('div');
+                    cameraContainer.id = 'cameraContainer';
+                    cameraContainer.style.marginTop = '20px';
+                    scanSection.appendChild(cameraContainer);
+                }
+                cameraContainer.innerHTML = `
+                    <video id="cameraVideo" width="320" height="240" autoplay style="border-radius:8px; border:1px solid #ddd;"></video>
+                    <br>
+                    <button class="btn btn-primary" onclick="captureCameraImage()">Capture</button>
+                    <canvas id="cameraCanvas" width="320" height="240" style="display:none;"></canvas>
+                `;
+
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        videoStream = stream;
+                        document.getElementById('cameraVideo').srcObject = stream;
+                    })
+                    .catch(() => {
+                        alert('Unable to access camera.');
+                    });
+            }
+
+            function captureCameraImage() {
+                const video = document.getElementById('cameraVideo');
+                const canvas = document.getElementById('cameraCanvas');
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                canvas.style.display = 'block';
+                // Simulate scan result
+                document.getElementById('scanResults').style.display = 'block';
+                document.getElementById('extractedPatient').value = "John Smith";
+                document.getElementById('extractedDate').value = "2023-10-20";
+                document.getElementById('extractedType').value = "Blood Test";
+                alert('Image captured and scanned! Extracted information is shown below.');
+                // Stop camera after capture
+                if (videoStream) {
+                    videoStream.getTracks().forEach(track => track.stop());
+                }
+            }
+        </script>
+        <div id="scan" class="page">
+            <h2>Scan Medical Report</h2>
+            <div class="scan-section">
+                <div class="scan-placeholder">
+                    <i class="fas fa-file-upload" style="font-size: 3rem; margin-right: 10px;"></i>
+                    <span>Upload or scan a medical report</span>
+                </div>
+                <input type="file" id="reportFile" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                <button class="btn btn-primary" onclick="document.getElementById('reportFile').click()">
+                    <i class="fas fa-upload"></i> Upload Report
+                </button>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-camera"></i> Use Camera
+                </button>
+            </div>
+            <div id="scanResults" style="margin-top: 30px; display: none;">
+                <h3>Extracted Information</h3>
+                <div class="form-group">
+                    <label for="extractedPatient">Patient Name</label>
+                    <input type="text" id="extractedPatient">
+                </div>
+                <div class="form-group">
+                    <label for="extractedDate">Report Date</label>
+                    <input type="date" id="extractedDate">
+                </div>
+                <div class="form-group">
+                    <label for="extractedType">Report Type</label>
+                    <input type="text" id="extractedType">
+                </div>
+                <button class="btn btn-primary" onclick="saveScannedReport()">Save Extracted Data</button>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="login" class="page">
+            <h2>Doctor Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p style="margin-top: 15px;">
+                    Don't have an account? <a href="#" onclick="showPage('signup')">Sign up here</a>
+                </p>
+            </form>
+        </div>
+
+        <!-- Signup Page -->
+        <div id="signup" class="page">
+            <h2>Doctor Sign Up</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupSpecialization">Specialization</label>
+                    <input type="text" id="signupSpecialization" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupLicense">Medical License Number</label>
+                    <input type="text" id="signupLicense" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+                <p style="margin-top: 15px;">
+                    Already have an account? <a href="#" onclick="showPage('login')">Login here</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy;  MediTrack - Advanced Patient Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced sample data for demonstration
+        let patients = [
+            { 
+                id: 1, 
+                name: "John Smith", 
+                age: 45, 
+                gender: "Male", 
+                bloodGroup: "A+",
+                contact: "123-456-7890", 
+                emergencyContact: "123-456-7891",
+                address: "123 Main St, City", 
+                physician: "Dr. Sarah Wilson",
+                insurance: "INS-123456",
+                allergies: "Penicillin, Shellfish",
+                conditions: ["Hypertension", "Type 2 Diabetes"],
+                medicalHistory: "Diagnosed with hypertension in 2015, type 2 diabetes in 2018.",
+                medications: ["Metformin 500mg twice daily", "Lisinopril 10mg daily"],
+                isCritical: true,
+                vitals: {
+                    bloodPressure: "145/92",
+                    heartRate: "88",
+                    temperature: "98.6°F",
+                    oxygenSaturation: "96%"
+                }
+            },
+            { 
+                id: 2, 
+                name: "Emily Johnson", 
+                age: 32, 
+                gender: "Female", 
+                bloodGroup: "B-",
+                contact: "987-654-3210", 
+                emergencyContact: "987-654-3211",
+                address: "456 Oak Ave, Town", 
+                physician: "Dr. Michael Chen",
+                insurance: "INS-654321",
+                allergies: "None",
+                conditions: ["Asthma"],
+                medicalHistory: "Childhood asthma, well controlled with medication.",
+                medications: ["Albuterol inhaler as needed"],
+                isCritical: false,
+                vitals: {
+                    bloodPressure: "118/76",
+                    heartRate: "72",
+                    temperature: "98.4°F",
+                    oxygenSaturation: "99%"
+                }
+            },
+            { 
+                id: 3, 
+                name: "Michael Brown", 
+                age: 58, 
+                gender: "Male", 
+                bloodGroup: "O+",
+                contact: "555-123-4567", 
+                emergencyContact: "555-123-4568",
+                address: "789 Pine Rd, Village", 
+                physician: "Dr. Sarah Wilson",
+                insurance: "INS-789012",
+                allergies: "Iodine",
+                conditions: ["High Cholesterol", "GERD"],
+                medicalHistory: "High cholesterol diagnosed in 2010, GERD in 2015.",
+                medications: ["Atorvastatin 20mg daily", "Omeprazole 20mg daily"],
+                isCritical: false,
+                vitals: {
+                    bloodPressure: "132/84",
+                    heartRate: "76",
+                    temperature: "98.2°F",
+                    oxygenSaturation: "97%"
+                }
+            },
+            { 
+                id: 4, 
+                name: "Sarah Davis", 
+                age: 67, 
+                gender: "Female", 
+                bloodGroup: "AB+",
+                contact: "444-555-6666", 
+                emergencyContact: "444-555-6667",
+                address: "321 Elm St, City", 
+                physician: "Dr. Robert Martinez",
+                insurance: "INS-345678",
+                allergies: "Sulfa drugs, Latex",
+                conditions: ["Congestive Heart Failure", "Atrial Fibrillation"],
+                medicalHistory: "CHF diagnosed 5 years ago, AFib diagnosed 2 years ago.",
+                medications: ["Furosemide 40mg daily", "Warfarin 5mg daily", "Digoxin 0.125mg daily"],
+                isCritical: true,
+                vitals: {
+                    bloodPressure: "158/96",
+                    heartRate: "112",
+                    temperature: "99.1°F",
+                    oxygenSaturation: "92%"
+                }
+            }
+        ];
+
+        let reports = [
+            { id: 1, patientId: 1, patientName: "John Smith", date: "2023-10-15", type: "Blood Test", findings: "Elevated glucose levels (180 mg/dL), elevated HbA1c (8.2%)", diagnosis: "Poorly controlled Type 2 Diabetes", recommendations: "Increase Metformin to 1000mg twice daily, dietary counseling" },
+            { id: 2, patientId: 2, patientName: "Emily Johnson", date: "2023-10-10", type: "X-Ray", findings: "Clear lungs, no signs of consolidation or effusion", diagnosis: "No acute cardiopulmonary process", recommendations: "Continue current treatment" },
+            { id: 3, patientId: 3, patientName: "Michael Brown", date: "2023-10-05", type: "Blood Test", findings: "High LDL cholesterol (160 mg/dL), normal HDL and triglycerides", diagnosis: "Hyperlipidemia", recommendations: "Continue statin therapy, consider increasing dose if no improvement in 3 months" },
+            { id: 4, patientId: 4, patientName: "Sarah Davis", date: "2023-10-18", type: "Echocardiogram", findings: "Reduced ejection fraction (35%), moderate mitral regurgitation", diagnosis: "Worsening congestive heart failure", recommendations: "Consider cardiac catheterization, adjust diuretic therapy" },
+            { id: 5, patientId: 1, patientName: "John Smith", date: "2023-09-20", type: "Physical Exam", findings: "Blood pressure elevated at 150/95, weight increased by 5 lbs since last visit", diagnosis: "Hypertension, obesity", recommendations: "Increase Lisinopril to 20mg daily, weight management counseling" }
+        ];
+
+        let doctors = [
+            { id: 1, name: "Dr. Sarah Wilson", email: "sarah@example.com", password: "password123", specialization: "Cardiology", license: "MD12345" }
+        ];
+
+        let currentDoctor = null;
+        let isLoggedIn = false;
+        let currentPatientId = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePatientList();
+            updateReportList();
+            updateDashboard();
+            populatePatientDropdown();
+            
+            // Form event listeners
+            document.getElementById('patientForm').addEventListener('submit', addPatient);
+            document.getElementById('reportForm').addEventListener('submit', addReport);
+            document.getElementById('loginForm').addEventListener('submit', login);
+            document.getElementById('signupForm').addEventListener('submit', signup);
+            document.getElementById('reportFile').addEventListener('change', handleFileUpload);
+            
+            // Check if user is already logged in (for demo purposes)
+            checkLoginStatus();
+        });
+
+        // Show the specified page and hide others
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update the page content if needed
+            if (pageId === 'patients') {
+                updatePatientList();
+            } else if (pageId === 'reports') {
+                updateReportList();
+            } else if (pageId === 'home') {
+                updateDashboard();
+            } else if (pageId === 'patientDetail' && currentPatientId) {
+                showPatientDetail(currentPatientId);
+            }
+        }
+
+        // Switch between tabs on the home page
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).style.display = 'block';
+            
+            if (tabId === 'criticalCases') {
+                updateCriticalPatientsList();
+            }
+        }
+
+        // Update the patient list display
+        function updatePatientList() {
+            const patientList = document.getElementById('patientList');
+            patientList.innerHTML = '';
+            
+            patients.forEach(patient => {
+                const patientCard = document.createElement('div');
+                patientCard.className = 'patient-card';
+                patientCard.setAttribute('data-id', patient.id);
+                patientCard.innerHTML = `
+                    <div class="patient-name">${patient.name} ${patient.isCritical ? '<span class="disease-tag critical">Critical</span>' : ''}</div>
+                    <div class="patient-details">
+                        <span>Age: ${patient.age}</span>
+                        <span>Gender: ${patient.gender}</span>
+                        <span>Blood Group: ${patient.bloodGroup}</span>
+                    </div>
+                    <div class="patient-details">
+                        <span>Conditions: ${patient.conditions.join(', ')}</span>
+                    </div>
+                `;
+                patientCard.addEventListener('click', function() {
+                    currentPatientId = patient.id;
+                    showPage('patientDetail');
+                });
+                patientList.appendChild(patientCard);
+            });
+        }
+
+        // Update the report list display
+        function updateReportList() {
+            const reportList = document.getElementById('reportList');
+            reportList.innerHTML = '';
+            
+            reports.forEach(report => {
+                const reportItem = document.createElement('div');
+                reportItem.className = 'report-item';
+                reportItem.innerHTML = `
+                    <div class="report-date">${report.date} - ${report.type}</div>
+                    <div class="patient-name">Patient: ${report.patientName}</div>
+                    <div class="report-details">
+                        <div><strong>Findings:</strong> ${report.findings}</div>
+                        <div><strong>Diagnosis:</strong> ${report.diagnosis}</div>
+                        <div><strong>Recommendations:</strong> ${report.recommendations}</div>
+                    </div>
+                `;
+                reportList.appendChild(reportItem);
+            });
+        }
+
+        // Update the dashboard with statistics
+        function updateDashboard() {
+            document.getElementById('totalPatients').textContent = patients.length;
+            document.getElementById('totalReports').textContent = reports.length;
+            document.getElementById('recentScans').textContent = '3'; // Placeholder
+            
+            const criticalPatients = patients.filter(p => p.isCritical).length;
+            document.getElementById('criticalPatients').textContent = criticalPatients;
+            
+            // Update recent patients
+            const recentPatientsList = document.getElementById('recentPatientsList');
+            recentPatientsList.innerHTML = '';
+            
+            patients.slice(0, 3).forEach(patient => {
+                const patientCard = document.createElement('div');
+                patientCard.className = 'patient-card';
+                patientCard.setAttribute('data-id', patient.id);
+                patientCard.innerHTML = `
+                    <div class="patient-name">${patient.name} ${patient.isCritical ? '<span class="disease-tag critical">Critical</span>' : ''}</div>
+                    <div class="patient-details">
+                        <span>Age: ${patient.age}</span>
+                        <span>Gender: ${patient.gender}</span>
+                    </div>
+                    <div class="patient-details">
+                        <span>Conditions: ${patient.conditions.join(', ')}</span>
+                    </div>
+                `;
+                patientCard.addEventListener('click', function() {
+                    currentPatientId = patient.id;
+                    showPage('patientDetail');
+                });
+                recentPatientsList.appendChild(patientCard);
+            });
+            
+            // Update recent reports
+            const recentReportsList = document.getElementById('recentReportsList');
+            recentReportsList.innerHTML = '';
+            
+            reports.slice(0, 3).forEach(report => {
+                const reportItem = document.createElement('div');
+                reportItem.className = 'report-item';
+                reportItem.innerHTML = `
+                    <div class="report-date">${report.date} - ${report.type}</div>
+                    <div class="patient-name">Patient: ${report.patientName}</div>
+                    <div class="report-details">
+                        <div><strong>Diagnosis:</strong> ${report.diagnosis}</div>
+                    </div>
+                `;
+                recentReportsList.appendChild(reportItem);
+            });
+        }
+
+        // Update critical patients list
+        function updateCriticalPatientsList() {
+            const criticalPatientsList = document.getElementById('criticalPatientsList');
+            criticalPatientsList.innerHTML = '';
+            
+            const criticalPatients = patients.filter(p => p.isCritical);
+            
+            if (criticalPatients.length === 0) {
+                criticalPatientsList.innerHTML = '<p>No critical patients at this time.</p>';
+                return;
+            }
+            
+            criticalPatients.forEach(patient => {
+                const patientCard = document.createElement('div');
+                patientCard.className = 'patient-card';
+                patientCard.setAttribute('data-id', patient.id);
+                patientCard.innerHTML = `
+                    <div class="patient-name">${patient.name} <span class="disease-tag critical">Critical</span></div>
+                    <div class="patient-details">
+                        <span>Age: ${patient.age}</span>
+                        <span>Gender: ${patient.gender}</span>
+                        <span>Blood Group: ${patient.bloodGroup}</span>
+                    </div>
+                    <div class="patient-details">
+                        <span>Conditions: ${patient.conditions.join(', ')}</span>
+                    </div>
+                    <div class="patient-details">
+                        <span>Primary Physician: ${patient.physician}</span>
+                    </div>
+                `;
+                patientCard.addEventListener('click', function() {
+                    currentPatientId = patient.id;
+                    showPage('patientDetail');
+                });
+                criticalPatientsList.appendChild(patientCard);
+            });
+        }
+
+        // Populate the patient dropdown for reports
+        function populatePatientDropdown() {
+            const patientDropdown = document.getElementById('reportPatient');
+            patientDropdown.innerHTML = '<option value="">Select Patient</option>';
+            
+            patients.forEach(patient => {
+                const option = document.createElement('option');
+                option.value = patient.id;
+                option.textContent = patient.name;
+                patientDropdown.appendChild(option);
+            });
+        }
+
+        // Show detailed patient information
+        function showPatientDetail(patientId) {
+            const patient = patients.find(p => p.id === patientId);
+            if (!patient) return;
+            
+            // Update patient detail page title
+            document.getElementById('detailPatientName').textContent = `Patient Details: ${patient.name}`;
+            
+            // Update personal information
+            document.getElementById('detailName').textContent = patient.name;
+            document.getElementById('detailAge').textContent = patient.age;
+            document.getElementById('detailGender').textContent = patient.gender;
+            document.getElementById('detailBloodGroup').textContent = patient.bloodGroup;
+            document.getElementById('detailContact').textContent = patient.contact;
+            document.getElementById('detailEmergencyContact').textContent = patient.emergencyContact;
+            
+            // Update medical information
+            document.getElementById('detailPhysician').textContent = patient.physician;
+            document.getElementById('detailInsurance').textContent = patient.insurance;
+            document.getElementById('detailAllergies').textContent = patient.allergies || 'None';
+            
+            // Show/hide critical alert
+            const alertElement = document.getElementById('detailAlert');
+            if (patient.isCritical) {
+                alertElement.style.display = 'block';
+            } else {
+                alertElement.style.display = 'none';
+            }
+            
+            // Update vital statistics
+            document.getElementById('detailBP').textContent = patient.vitals.bloodPressure;
+            document.getElementById('detailHR').textContent = patient.vitals.heartRate;
+            document.getElementById('detailTemp').textContent = patient.vitals.temperature;
+            document.getElementById('detailO2').textContent = patient.vitals.oxygenSaturation;
+            
+            // Update conditions
+            const conditionsContainer = document.getElementById('detailConditions');
+            conditionsContainer.innerHTML = '';
+            patient.conditions.forEach(condition => {
+                const tag = document.createElement('span');
+                tag.className = 'disease-tag';
+                tag.textContent = condition;
+                conditionsContainer.appendChild(tag);
+            });
+            
+            // Update reports
+            const reportsContainer = document.getElementById('detailReports');
+            reportsContainer.innerHTML = '';
+            const patientReports = reports.filter(r => r.patientId === patientId);
+            
+            if (patientReports.length === 0) {
+                reportsContainer.innerHTML = '<p>No reports available for this patient.</p>';
+            } else {
+                patientReports.forEach(report => {
+                    const reportElement = document.createElement('div');
+                    reportElement.className = 'report-item';
+                    reportElement.innerHTML = `
+                        <div class="report-date">${report.date} - ${report.type}</div>
+                        <div class="report-details">
+                            <div><strong>Findings:</strong> ${report.findings}</div>
+                            <div><strong>Diagnosis:</strong> ${report.diagnosis}</div>
+                            <div><strong>Recommendations:</strong> ${report.recommendations}</div>
+                        </div>
+                    `;
+                    reportsContainer.appendChild(reportElement);
+                });
+            }
+            
+            // Update medications
+            const medicationsContainer = document.getElementById('detailMedications');
+            medicationsContainer.innerHTML = '';
+            if (patient.medications && patient.medications.length > 0) {
+                patient.medications.forEach(med => {
+                    const medElement = document.createElement('div');
+                    medElement.className = 'info-item';
+                    medElement.innerHTML = `
+                        <span class="info-label">${med.split(' ')[0]}:</span>
+                        <span class="info-value">${med}</span>
+                    `;
+                    medicationsContainer.appendChild(medElement);
+                });
+            } else {
+                medicationsContainer.innerHTML = '<p>No current medications.</p>';
+            }
+        }
+
+        // Add a new patient
+        function addPatient(e) {
+            e.preventDefault();
+            
+            const conditions = document.getElementById('patientConditions').value
+                .split(',')
+                .map(condition => condition.trim())
+                .filter(condition => condition !== '');
+                
+            const newPatient = {
+                id: patients.length + 1,
+                name: document.getElementById('patientName').value,
+                age: document.getElementById('patientAge').value,
+                gender: document.getElementById('patientGender').value,
+                bloodGroup: document.getElementById('patientBloodGroup').value,
+                contact: document.getElementById('patientContact').value,
+                emergencyContact: document.getElementById('patientEmergencyContact').value,
+                address: document.getElementById('patientAddress').value,
+                physician: document.getElementById('patientPhysician').value,
+                insurance: document.getElementById('patientInsurance').value,
+                allergies: document.getElementById('patientAllergies').value,
+                conditions: conditions,
+                medicalHistory: document.getElementById('patientMedicalHistory').value,
+                isCritical: false,
+                vitals: {
+                    bloodPressure: "120/80",
+                    heartRate: "72",
+                    temperature: "98.6°F",
+                    oxygenSaturation: "98%"
+                }
+            };
+            
+            patients.push(newPatient);
+            updatePatientList();
+            populatePatientDropdown();
+            updateDashboard();
+            showPage('patients');
+            
+            // Reset form
+            document.getElementById('patientForm').reset();
+        }
+
+        // Add a new report
+        function addReport(e) {
+            e.preventDefault();
+            
+            const patientId = parseInt(document.getElementById('reportPatient').value);
+            const patient = patients.find(p => p.id === patientId);
+            
+            const newReport = {
+                id: reports.length + 1,
+                patientId: patientId,
+                patientName: patient.name,
+                date: document.getElementById('reportDate').value,
+                type: document.getElementById('reportType').value,
+                findings: document.getElementById('reportFindings').value,
+                diagnosis: document.getElementById('reportDiagnosis').value,
+                recommendations: document.getElementById('reportRecommendations').value
+            };
+            
+            reports.push(newReport);
+            updateReportList();
+            updateDashboard();
+            showPage('reports');
+            
+            // Reset form
+            document.getElementById('reportForm').reset();
+        }
+
+        // Search patients by name
+        function searchPatients() {
+            const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
+            const filteredPatients = patients.filter(patient => 
+                patient.name.toLowerCase().includes(searchTerm)
+            );
+            
+            const patientList = document.getElementById('patientList');
+            patientList.innerHTML = '';
+            
+            filteredPatients.forEach(patient => {
+                const patientCard = document.createElement('div');
+                patientCard.className = 'patient-card';
+                patientCard.setAttribute('data-id', patient.id);
+                patientCard.innerHTML = `
+                    <div class="patient-name">${patient.name} ${patient.isCritical ? '<span class="disease-tag critical">Critical</span>' : ''}</div>
+                    <div class="patient-details">
+                        <span>Age: ${patient.age}</span>
+                        <span>Gender: ${patient.gender}</span>
+                        <span>Blood Group: ${patient.bloodGroup}</span>
+                    </div>
+                `;
+                patientCard.addEventListener('click', function() {
+                    currentPatientId = patient.id;
+                    showPage('patientDetail');
+                });
+                patientList.appendChild(patientCard);
+            });
+        }
+
+        // Search reports by patient name
+        function searchReports() {
+            const searchTerm = document.getElementById('reportSearch').value.toLowerCase();
+            const filteredReports = reports.filter(report => 
+                report.patientName.toLowerCase().includes(searchTerm)
+            );
+            
+            const reportList = document.getElementById('reportList');
+            reportList.innerHTML = '';
+            
+            filteredReports.forEach(report => {
+                const reportItem = document.createElement('div');
+                reportItem.className = 'report-item';
+                reportItem.innerHTML = `
+                    <div class="report-date">${report.date} - ${report.type}</div>
+                    <div class="patient-name">Patient: ${report.patientName}</div>
+                    <div class="report-details">
+                        <div><strong>Findings:</strong> ${report.findings}</div>
+                        <div><strong>Diagnosis:</strong> ${report.diagnosis}</div>
+                    </div>
+                `;
+                reportList.appendChild(reportItem);
+            });
+        }
+
+        // Handle file upload for report scanning
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Simulate scanning process
+                document.getElementById('scanResults').style.display = 'block';
+                
+                // Simulate extracted data (in a real app, this would come from OCR)
+                document.getElementById('extractedPatient').value = "John Smith";
+                document.getElementById('extractedDate').value = "2023-10-20";
+                document.getElementById('extractedType').value = "Blood Test";
+                
+                alert('Report scanned successfully! Extracted information is shown below.');
+            }
+        }
+
+        // Save scanned report data
+        function saveScannedReport() {
+            const patientName = document.getElementById('extractedPatient').value;
+            const reportDate = document.getElementById('extractedDate').value;
+            const reportType = document.getElementById('extractedType').value;
+            
+            if (patientName && reportDate && reportType) {
+                // Find or create patient
+                let patient = patients.find(p => p.name === patientName);
+                if (!patient) {
+                    patient = {
+                        id: patients.length + 1,
+                        name: patientName,
+                        age: 0,
+                        gender: "Unknown",
+                        bloodGroup: "Unknown",
+                        contact: "Unknown",
+                        emergencyContact: "Unknown",
+                        address: "Unknown",
+                        physician: "Unknown",
+                        insurance: "Unknown",
+                        allergies: "Unknown",
+                        conditions: [],
+                        medicalHistory: "Unknown",
+                        isCritical: false,
+                        vitals: {
+                            bloodPressure: "120/80",
+                            heartRate: "72",
+                            temperature: "98.6°F",
+                            oxygenSaturation: "98%"
+                        }
+                    };
+                    patients.push(patient);
+                }
+                
+                // Create report
+                const newReport = {
+                    id: reports.length + 1,
+                    patientId: patient.id,
+                    patientName: patientName,
+                    date: reportDate,
+                    type: reportType,
+                    findings: "Extracted from scanned report",
+                    diagnosis: "To be determined by doctor",
+                    recommendations: "Further analysis needed"
+                };
+                
+                reports.push(newReport);
+                updateReportList();
+                updateDashboard();
+                populatePatientDropdown();
+                
+                alert('Scanned report data saved successfully!');
+                showPage('reports');
+            } else {
+                alert('Please fill in all extracted fields.');
+            }
+        }
+
+        // Login function
+        function login(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simple authentication (in a real app, this would be more secure)
+            const doctor = doctors.find(d => d.email === email && d.password === password);
+            
+            if (doctor) {
+                currentDoctor = doctor;
+                isLoggedIn = true;
+                updateLoginUI();
+                showPage('home');
+                alert(`Welcome back, ${doctor.name}!`);
+            } else {
+                alert('Invalid email or password. Please try again.');
+            }
+        }
+
+        // Signup function
+        function signup(e) {
+            e.preventDefault();
+            
+            const newDoctor = {
+                id: doctors.length + 1,
+                name: document.getElementById('signupName').value,
+                email: document.getElementById('signupEmail').value,
+                password: document.getElementById('signupPassword').value,
+                specialization: document.getElementById('signupSpecialization').value,
+                license: document.getElementById('signupLicense').value
+            };
+            
+            doctors.push(newDoctor);
+            currentDoctor = newDoctor;
+            isLoggedIn = true;
+            updateLoginUI();
+            showPage('home');
+            alert(`Account created successfully! Welcome, ${newDoctor.name}!`);
+        }
+
+        // Logout function
+        function logout() {
+            currentDoctor = null;
+            isLoggedIn = false;
+            updateLoginUI();
+            showPage('home');
+            alert('You have been logged out.');
+        }
+
+        // Update UI based on login status
+        function updateLoginUI() {
+            if (isLoggedIn) {
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('signupBtn').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('loginBtn').style.display = 'inline-block';
+                document.getElementById('signupBtn').style.display = 'inline-block';
+                document.getElementById('logoutBtn').style.display = 'none';
+            }
+        }
+
+        // Check if user is logged in (for demo purposes)
+        function checkLoginStatus() {
+            // For demo, automatically log in with a sample account
+            if (doctors.length > 0) {
+                currentDoctor = doctors[0];
+                isLoggedIn = true;
+                updateLoginUI();
+            }
+        }
+    </script>
+</body>
+</html>
